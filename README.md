@@ -461,3 +461,52 @@ and a1.activity_type='start'
 and a2.activity_type='end'
 group by a1.machine_id;
 ```
+
+## 11 Employee Bonus
+
+Write a solution to report the name and bonus amount of each employee who satisfies either of the following:
+
+The employee has a bonus less than 1000.
+The employee did not get any bonus.
+Return the result table in any order.
+
+The result format is in the following example.
+
+```txt
+Example 1:
+
+Input: 
+Employee table:
++-------+--------+------------+--------+
+| empId | name   | supervisor | salary |
++-------+--------+------------+--------+
+| 3     | Brad   | null       | 4000   |
+| 1     | John   | 3          | 1000   |
+| 2     | Dan    | 3          | 2000   |
+| 4     | Thomas | 3          | 4000   |
++-------+--------+------------+--------+
+Bonus table:
++-------+-------+
+| empId | bonus |
++-------+-------+
+| 2     | 500   |
+| 4     | 2000  |
++-------+-------+
+Output: 
++------+-------+
+| name | bonus |
++------+-------+
+| Brad | null  |
+| John | null  |
+| Dan  | 500   |
++------+-------+
+```
+
+```sql
+select e.name,b.bonus
+from employee as e
+left join bonus as b
+on e.empid=b.empid
+where b.bonus is null
+or b.bonus<1000;
+```
