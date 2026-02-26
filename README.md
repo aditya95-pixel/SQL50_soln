@@ -360,3 +360,44 @@ on v.visit_id=t.visit_id
 where t.transaction_id is null
 group by v.customer_id;
 ```
+
+## 9 Rising Temperature
+
+Write a solution to find all dates' id with higher temperatures compared to its previous dates (yesterday).
+
+Return the result table in any order.
+
+The result format is in the following example.
+
+```txt
+Example 1:
+
+Input: 
+Weather table:
++----+------------+-------------+
+| id | recordDate | temperature |
++----+------------+-------------+
+| 1  | 2015-01-01 | 10          |
+| 2  | 2015-01-02 | 25          |
+| 3  | 2015-01-03 | 20          |
+| 4  | 2015-01-04 | 30          |
++----+------------+-------------+
+Output: 
++----+
+| id |
++----+
+| 2  |
+| 4  |
++----+
+Explanation: 
+In 2015-01-02, the temperature was higher than the previous day (10 -> 25).
+In 2015-01-04, the temperature was higher than the previous day (20 -> 30).
+```
+
+```sql
+select w1.id
+from Weather as w1
+cross join Weather as w2
+where w1.temperature>w2.temperature
+and w1.recordDate=date_add(w2.recordDate,interval 1 day);
+```
