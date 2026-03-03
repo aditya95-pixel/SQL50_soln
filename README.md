@@ -949,3 +949,40 @@ select q.query_name,round(avg(rating/position),2) as quality,round((select count
 from queries as q
 group by query_name;
 ```
+
+## 20 Monthly Transactions I
+
+Write an SQL query to find for each month and country, the number of transactions and their total amount, the number of approved transactions and their total amount.
+
+Return the result table in any order.
+
+The query result format is in the following example.
+
+```txt
+Example 1:
+
+Input: 
+Transactions table:
++------+---------+----------+--------+------------+
+| id   | country | state    | amount | trans_date |
++------+---------+----------+--------+------------+
+| 121  | US      | approved | 1000   | 2018-12-18 |
+| 122  | US      | declined | 2000   | 2018-12-19 |
+| 123  | US      | approved | 2000   | 2019-01-01 |
+| 124  | DE      | approved | 2000   | 2019-01-07 |
++------+---------+----------+--------+------------+
+Output: 
++----------+---------+-------------+----------------+--------------------+-----------------------+
+| month    | country | trans_count | approved_count | trans_total_amount | approved_total_amount |
++----------+---------+-------------+----------------+--------------------+-----------------------+
+| 2018-12  | US      | 2           | 1              | 3000               | 1000                  |
+| 2019-01  | US      | 1           | 1              | 2000               | 2000                  |
+| 2019-01  | DE      | 1           | 1              | 2000               | 2000                  |
++----------+---------+-------------+----------------+--------------------+-----------------------+
+```
+```sql
+select date_format(trans_date,'%Y-%m') as month,t.country,count(state) as trans_count,coalesce((select count(state) from transactions where (country=t.country or (country is null and t.country is null)) and state='approved' and date_format(trans_date,'%Y-%m')=month),0) as approved_count,
+sum(amount) as trans_total_amount,coalesce((select sum(amount) from transactions where (country=t.country or (country is null and t.country is null)) and state='approved' and date_format(trans_date,'%Y-%m')=month),0) as approved_total_amount
+from transactions as t
+group by month,country;
+```
