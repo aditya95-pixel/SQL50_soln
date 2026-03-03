@@ -1031,3 +1031,45 @@ Hence, half the customers have immediate first orders.
 select round((select count(distinct customer_id) from delivery as d where order_date=customer_pref_delivery_date and order_date=(select min(order_date) from delivery where customer_id=d.customer_id))/count(distinct customer_id)*100,2) as immediate_percentage
 from delivery;
 ```
+
+## 22 Game Play Analysis IV
+
+Write a solution to report the fraction of players that logged in again on the day after the day they first logged in, rounded to 2 decimal places. In other words, you need to determine the number of players who logged in on the day immediately following their initial login, and divide it by the number of total players.
+
+The result format is in the following example.
+
+```txt
+Example 1:
+
+Input: 
+Activity table:
++-----------+-----------+------------+--------------+
+| player_id | device_id | event_date | games_played |
++-----------+-----------+------------+--------------+
+| 1         | 2         | 2016-03-01 | 5            |
+| 1         | 2         | 2016-03-02 | 6            |
+| 2         | 3         | 2017-06-25 | 1            |
+| 3         | 1         | 2016-03-02 | 0            |
+| 3         | 4         | 2018-07-03 | 5            |
++-----------+-----------+------------+--------------+
+Output: 
++-----------+
+| fraction  |
++-----------+
+| 0.33      |
++-----------+
+Explanation: 
+Only the player with id 1 logged back in after the first day he had logged in so the answer is 1/3 = 0.33
+```
+
+```sql
+select round(count(distinct a2.player_id)/count(distinct a1.player_id),2) as fraction
+from (
+    select player_id,min(event_date) as start_date
+    from activity
+    group by player_id
+) as a1
+left join activity as a2
+on a1.player_id=a2.player_id
+and a2.event_date=date_add(a1.start_date,interval 1 day);
+```
