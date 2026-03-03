@@ -1620,7 +1620,9 @@ and id+2 in
 );
 ```
 
-## 34 Initially, all products have price 10.
+## 34 Product Price at a Given Date
+
+Initially, all products have price 10.
 
 Write a solution to find the prices of all products on the date 2019-08-16.
 
