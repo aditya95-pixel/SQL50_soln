@@ -1530,3 +1530,36 @@ or employee_id in(
     having count(department_id)=1
 );
 ```
+
+## 32 Triangle Judgement
+Report for every three line segments whether they can form a triangle.
+
+Return the result table in any order.
+
+The result format is in the following example.
+
+ 
+```txt
+Example 1:
+
+Input: 
+Triangle table:
++----+----+----+
+| x  | y  | z  |
++----+----+----+
+| 13 | 15 | 30 |
+| 10 | 20 | 15 |
++----+----+----+
+Output: 
++----+----+----+----------+
+| x  | y  | z  | triangle |
++----+----+----+----------+
+| 13 | 15 | 30 | No       |
+| 10 | 20 | 15 | Yes      |
++----+----+----+----------+
+```
+
+```sql
+select x,y,z,if(x+y<=z or y+z<=x or z+x<=y,'No','Yes') as triangle
+from triangle;
+```
