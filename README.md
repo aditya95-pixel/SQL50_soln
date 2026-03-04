@@ -1875,3 +1875,85 @@ Note that if the number of students is odd, there is no need to change the last 
 select s1.id,if(s1.id%2<>0 and s1.id+1 in (select distinct id from seat),(select s2.student from seat as s2 where s2.id=s1.id+1),if(s1.id%2=0,(select s2.student from seat as s2 where s2.id=s1.id-1),s1.student)) as student
 from seat as s1;
 ```
+
+## 39 Movie Rating
+
+Write a solution to:
+
+Find the name of the user who has rated the greatest number of movies. In case of a tie, return the lexicographically smaller user name.
+Find the movie name with the highest average rating in February 2020. In case of a tie, return the lexicographically smaller movie name.
+The result format is in the following example.
+
+```txt
+Example 1:
+
+Input: 
+Movies table:
++-------------+--------------+
+| movie_id    |  title       |
++-------------+--------------+
+| 1           | Avengers     |
+| 2           | Frozen 2     |
+| 3           | Joker        |
++-------------+--------------+
+Users table:
++-------------+--------------+
+| user_id     |  name        |
++-------------+--------------+
+| 1           | Daniel       |
+| 2           | Monica       |
+| 3           | Maria        |
+| 4           | James        |
++-------------+--------------+
+MovieRating table:
++-------------+--------------+--------------+-------------+
+| movie_id    | user_id      | rating       | created_at  |
++-------------+--------------+--------------+-------------+
+| 1           | 1            | 3            | 2020-01-12  |
+| 1           | 2            | 4            | 2020-02-11  |
+| 1           | 3            | 2            | 2020-02-12  |
+| 1           | 4            | 1            | 2020-01-01  |
+| 2           | 1            | 5            | 2020-02-17  | 
+| 2           | 2            | 2            | 2020-02-01  | 
+| 2           | 3            | 2            | 2020-03-01  |
+| 3           | 1            | 3            | 2020-02-22  | 
+| 3           | 2            | 4            | 2020-02-25  | 
++-------------+--------------+--------------+-------------+
+Output: 
++--------------+
+| results      |
++--------------+
+| Daniel       |
+| Frozen 2     |
++--------------+
+Explanation: 
+Daniel and Monica have rated 3 movies ("Avengers", "Frozen 2" and "Joker") but Daniel is smaller lexicographically.
+Frozen 2 and Joker have a rating average of 3.5 in February but Frozen 2 is smaller lexicographically.
+```
+
+```sql
+select min(u.name) as results
+from users as u
+where (select count(m.movie_id) from movierating as m where u.user_id=m.user_id)=
+( 
+    select max(m1.cnt)
+    from (
+        select user_id,count(movie_id) as cnt
+        from movierating
+        group by user_id
+    )  as m1
+)
+union all
+select min(m2.title) as results
+from movies as m2
+where round((select avg(m4.rating) from movierating as m4 where m4.created_at between '2020-02-01' and '2020-02-29' and m4.movie_id=m2.movie_id),4)=round(
+(
+    select max(m3.r)
+    from (
+        select movie_id,avg(rating) as r
+        from movierating
+        where created_at between '2020-02-01' and '2020-02-29'
+        group by movie_id
+    ) as m3
+),4);
+```
