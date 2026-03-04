@@ -1834,3 +1834,44 @@ and manager_id not in
 )
 order by employee_id;
 ```
+
+## 38 Exchange Seats
+
+Write a solution to swap the seat id of every two consecutive students. If the number of students is odd, the id of the last student is not swapped.
+
+Return the result table ordered by id in ascending order.
+
+The result format is in the following example.
+ 
+```txt
+Example 1:
+
+Input: 
+Seat table:
++----+---------+
+| id | student |
++----+---------+
+| 1  | Abbot   |
+| 2  | Doris   |
+| 3  | Emerson |
+| 4  | Green   |
+| 5  | Jeames  |
++----+---------+
+Output: 
++----+---------+
+| id | student |
++----+---------+
+| 1  | Doris   |
+| 2  | Abbot   |
+| 3  | Green   |
+| 4  | Emerson |
+| 5  | Jeames  |
++----+---------+
+Explanation: 
+Note that if the number of students is odd, there is no need to change the last one's seat.
+```
+
+```sql
+select s1.id,if(s1.id%2<>0 and s1.id+1 in (select distinct id from seat),(select s2.student from seat as s2 where s2.id=s1.id+1),if(s1.id%2=0,(select s2.student from seat as s2 where s2.id=s1.id-1),s1.student)) as student
+from seat as s1;
+```
