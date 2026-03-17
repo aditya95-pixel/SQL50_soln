@@ -2187,3 +2187,35 @@ where t.r<=3;
 |ROW_NUMBER()|Assigns a unique number to every row.|"1, 2, 3"|
 |RANK()|Leaves gaps after ties.|"1, 1, 3"|
 |DENSE_RANK()|No gaps after ties.|"1, 1, 2"|
+
+## 44 Write a solution to fix the names so that only the first character is uppercase and the rest are lowercase.
+
+Return the result table ordered by user_id.
+
+The result format is in the following example.
+
+```txt
+Example 1:
+
+Input: 
+Users table:
++---------+-------+
+| user_id | name  |
++---------+-------+
+| 1       | aLice |
+| 2       | bOB   |
++---------+-------+
+Output: 
++---------+-------+
+| user_id | name  |
++---------+-------+
+| 1       | Alice |
+| 2       | Bob   |
++---------+-------+
+```
+
+```sql
+elect user_id,concat(upper(substr(name,1,1)),lower(substr(name,2,length(name)))) as name
+from users
+order by user_id;
+```
