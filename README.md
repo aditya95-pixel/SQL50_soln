@@ -2181,3 +2181,9 @@ from (
 )as t
 where t.r<=3;
 ```
+
+|Function|Behavior|Result for Salaries (100, 100, 90)|
+|--------|--------|----------------------------------|
+|ROW_NUMBER()|Assigns a unique number to every row.|"1, 2, 3"|
+|RANK()|Leaves gaps after ties.|"1, 1, 3"|
+|DENSE_RANK()|No gaps after ties.|"1, 1, 2"|
