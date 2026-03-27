@@ -2516,7 +2516,7 @@ where regexp_like(mail,'^[a-zA-Z]+[a-zA-Z0-9_.-]*@leetcode\\.com$','c');
 
 # Shell
 
-# 1 Word Frequency
+## 1 Word Frequency
 
 Write a bash script to calculate the frequency of each word in a text file words.txt.
 
